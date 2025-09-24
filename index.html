@@ -14,16 +14,15 @@
         align-items: center;
         height: 100vh;
     }
-    .form-container {
+    .container {
         background: rgba(0,0,0,0.8);
         padding: 30px;
         border-radius: 12px;
         width: 400px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        text-align: center;
     }
     h2 {
-        text-align: center;
-        margin-bottom: 20px;
         color: #9ccc65;
     }
     label {
@@ -66,65 +65,88 @@
         font-size: 20px;
         margin-top: 20px;
     }
+    /* Barra de carga */
+    #loader {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    #progress {
+        height: 20px;
+        background: #9ccc65;
+        width: 0%;
+    }
 </style>
 </head>
 <body>
 
-<div class="form-container">
-<h2>Formulario Staff</h2>
-<form id="form">
+<div class="container" id="loaderScreen">
+    <h2>Cargando...</h2>
+    <div id="loader"><div id="progress"></div></div>
+</div>
 
-    <div class="step active">
-        <label>Nombre Real:</label>
-        <input type="text" name="nombre" required>
-        <button type="button" onclick="nextStep()">Siguiente</button>
-    </div>
+<div class="container" id="infoScreen" style="display:none;">
+    <h2>Formulario Personal</h2>
+    <p>Estas preguntas son personales y debes responderlas honestamente.<br>No serán reveladas a nadie.</p>
+    <button onclick="startForm()">OK</button>
+</div>
 
-    <div class="step">
-        <label>Correo:</label>
-        <input type="email" name="correo" required>
-        <button type="button" onclick="nextStep()">Siguiente</button>
-    </div>
+<div class="container" id="formScreen" style="display:none;">
+    <h2>Formulario Staff</h2>
+    <form id="form">
 
-    <div class="step">
-        <label>País:</label>
-        <input type="text" name="pais" required>
-        <button type="button" onclick="nextStep()">Siguiente</button>
-    </div>
+        <div class="step active">
+            <label>Nombre Real:</label>
+            <input type="text" name="nombre" required>
+            <button type="button" onclick="nextStep()">Siguiente</button>
+        </div>
 
-    <div class="step">
-        <label>Cumpleaños:</label>
-        <input type="date" name="cumpleanos" required>
-        <button type="button" onclick="nextStep()">Siguiente</button>
-    </div>
+        <div class="step">
+            <label>Correo:</label>
+            <input type="email" name="correo" required>
+            <button type="button" onclick="nextStep()">Siguiente</button>
+        </div>
 
-    <div class="step">
-        <label>Edad:</label>
-        <input type="number" name="edad" required>
-        <button type="button" onclick="nextStep()">Siguiente</button>
-    </div>
+        <div class="step">
+            <label>País:</label>
+            <input type="text" name="pais" required>
+            <button type="button" onclick="nextStep()">Siguiente</button>
+        </div>
 
-    <div class="step">
-        <label>Nick en Discord:</label>
-        <input type="text" name="discord" required>
-        <button type="button" onclick="nextStep()">Siguiente</button>
-    </div>
+        <div class="step">
+            <label>Cumpleaños:</label>
+            <input type="date" name="cumpleanos" required>
+            <button type="button" onclick="nextStep()">Siguiente</button>
+        </div>
 
-    <div class="step">
-        <label>Nick en Minecraft:</label>
-        <input type="text" name="minecraft" required>
-        <button type="button" onclick="nextStep()">Siguiente</button>
-    </div>
+        <div class="step">
+            <label>Edad:</label>
+            <input type="number" name="edad" required>
+            <button type="button" onclick="nextStep()">Siguiente</button>
+        </div>
 
-    <div class="step">
-        <label>¿Qué te gusta hacer en tu tiempo libre?</label>
-        <textarea name="tiempoLibre" required></textarea>
-        <button type="submit">Enviar</button>
-    </div>
+        <div class="step">
+            <label>Nick en Discord:</label>
+            <input type="text" name="discord" required>
+            <button type="button" onclick="nextStep()">Siguiente</button>
+        </div>
 
-</form>
+        <div class="step">
+            <label>Nick en Minecraft:</label>
+            <input type="text" name="minecraft" required>
+            <button type="button" onclick="nextStep()">Siguiente</button>
+        </div>
 
-<div id="successMessage" class="success"></div>
+        <div class="step">
+            <label>¿Qué te gusta hacer en tu tiempo libre?</label>
+            <textarea name="tiempoLibre" required></textarea>
+            <button type="submit">Enviar</button>
+        </div>
+
+    </form>
+    <div id="successMessage" class="success"></div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -156,6 +178,11 @@ function nextStep() {
     }
 }
 
+function startForm() {
+    document.getElementById("infoScreen").style.display = "none";
+    document.getElementById("formScreen").style.display = "block";
+}
+
 document.getElementById("form").addEventListener("submit", function(e) {
     e.preventDefault();
 
@@ -176,10 +203,23 @@ document.getElementById("form").addEventListener("submit", function(e) {
             alert("❌ Error al enviar: " + error);
         } else {
             document.getElementById("form").style.display = "none";
-            document.getElementById("successMessage").innerHTML = "✅ Respuesta enviada correctamente!";
+            document.getElementById("successMessage").innerHTML = "✅ ¡Respuestas enviadas correctamente!";
         }
     });
 });
+
+// Barra de carga
+let progress = 0;
+let loaderInterval = setInterval(() => {
+    progress += 2;
+    document.getElementById("progress").style.width = progress + "%";
+    if (progress >= 100) {
+        clearInterval(loaderInterval);
+        document.getElementById("loaderScreen").style.display = "none";
+        document.getElementById("infoScreen").style.display = "block";
+    }
+}, 50);
+
 </script>
 
 </body>
