@@ -67,3 +67,10 @@ let loaderInterval = setInterval(() => {
         document.getElementById("infoScreen").style.display = "block";
     }
 }, 50);
+
+function openPrivacy() {
+    document.getElementById("privacyModal").style.display = "block";
+}
+function closePrivacy() {
+    document.getElementById("privacyModal").style.display = "none";
+}
