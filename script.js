@@ -16,13 +16,22 @@ let currentStep = 0;
 const steps = document.querySelectorAll(".step");
 
 function nextStep() {
-    if (!steps[currentStep].querySelector("input, textarea").value) {
-        alert("❌ Por favor completa la pregunta antes de continuar.");
+    const input = steps[currentStep].querySelector("input, textarea");
+    if (!input.value.trim()) {
+        showErrorModal("❌ Por favor completa la pregunta antes de continuar.");
         return;
     }
     steps[currentStep].classList.remove("active");
     currentStep++;
     if (currentStep < steps.length) {
+        steps[currentStep].classList.add("active");
+    }
+}
+
+function prevStep() {
+    if (currentStep > 0) {
+        steps[currentStep].classList.remove("active");
+        currentStep--;
         steps[currentStep].classList.add("active");
     }
 }
@@ -34,7 +43,6 @@ function startForm() {
 
 document.getElementById("form").addEventListener("submit", function(e) {
     e.preventDefault();
-
     const formData = {
         nombre: e.target.nombre.value,
         correo: e.target.correo.value,
@@ -49,14 +57,23 @@ document.getElementById("form").addEventListener("submit", function(e) {
 
     db.ref("respuestas").push(formData, function(error) {
         if (error) {
-            alert("❌ Error al enviar: " + error);
+            showErrorModal("❌ Error al enviar: " + error);
         } else {
             document.getElementById("form").style.display = "none";
-            document.getElementById("successMessage").innerHTML = "✅ ¡Respuestas enviadas correctamente!<br>No serán reveladas a nadie.";
+            document.getElementById("successMessage").innerHTML = "✅ ¡Respuestas enviadas correctamente!<br>No serán reveladas a nadie.<br><b>Por favor no compartas este enlace.</b>";
         }
     });
 });
 
+function showErrorModal(message) {
+    document.getElementById("errorText").innerText = message;
+    document.getElementById("errorModal").style.display = "block";
+}
+function closeErrorModal() {
+    document.getElementById("errorModal").style.display = "none";
+}
+
+// Barra de carga
 let progress = 0;
 let loaderInterval = setInterval(() => {
     progress += 2;
@@ -67,10 +84,3 @@ let loaderInterval = setInterval(() => {
         document.getElementById("infoScreen").style.display = "block";
     }
 }, 50);
-
-function openPrivacy() {
-    document.getElementById("privacyModal").style.display = "block";
-}
-function closePrivacy() {
-    document.getElementById("privacyModal").style.display = "none";
-}
