@@ -8,6 +8,7 @@ const firebaseConfig = {
   appId: "1:694006707121:web:79267ca0496b935bd88390",
   measurementId: "G-FLNG6V9KMK"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
@@ -15,10 +16,12 @@ let currentStep = 0;
 const steps = document.querySelectorAll(".step");
 
 function nextStep() {
-    const input = steps[currentStep].querySelector("input, textarea");
-    if (!input.value.trim()) {
-        showErrorModal("❌ Por favor completa la pregunta antes de continuar.");
-        return;
+    const inputs = steps[currentStep].querySelectorAll("input, textarea");
+    for (let input of inputs) {
+        if (!input.value.trim()) {
+            alert("❌ Por favor completa la pregunta antes de continuar.");
+            return;
+        }
     }
     steps[currentStep].classList.remove("active");
     currentStep++;
@@ -28,11 +31,9 @@ function nextStep() {
 }
 
 function prevStep() {
-    if (currentStep > 0) {
-        steps[currentStep].classList.remove("active");
-        currentStep--;
-        steps[currentStep].classList.add("active");
-    }
+    steps[currentStep].classList.remove("active");
+    currentStep--;
+    steps[currentStep].classList.add("active");
 }
 
 function startForm() {
@@ -42,6 +43,7 @@ function startForm() {
 
 document.getElementById("form").addEventListener("submit", function(e) {
     e.preventDefault();
+
     const formData = {
         nombre: e.target.nombre.value,
         correo: e.target.correo.value,
@@ -53,32 +55,16 @@ document.getElementById("form").addEventListener("submit", function(e) {
         tiempoLibre: e.target.tiempoLibre.value,
         fechaEnvio: new Date().toISOString()
     };
+
     db.ref("respuestas").push(formData, function(error) {
         if (error) {
-            showErrorModal("❌ Error al enviar: " + error);
+            alert("❌ Error al enviar: " + error);
         } else {
             document.getElementById("form").style.display = "none";
-            document.getElementById("successMessage").innerHTML = `
-                ✅ ¡Respuestas enviadas correctamente!<br>
-                No serán reveladas a nadie.<br>
-                <b>Por favor no compartas este enlace.</b>`;
+            document.getElementById("successMessage").innerHTML = "✅ ¡Respuestas enviadas correctamente!<br>No serán reveladas a nadie.";
         }
     });
 });
-
-function showErrorModal(message) {
-    document.getElementById("errorText").innerText = message;
-    document.getElementById("errorModal").style.display = "block";
-}
-function closeErrorModal() {
-    document.getElementById("errorModal").style.display = "none";
-}
-function showPrivacyModal() {
-    document.getElementById("privacyModal").style.display = "block";
-}
-function closePrivacyModal() {
-    document.getElementById("privacyModal").style.display = "none";
-}
 
 // Barra de carga
 let progress = 0;
