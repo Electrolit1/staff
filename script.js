@@ -88,10 +88,15 @@ document.getElementById("form").addEventListener("submit", function(e) {
     });
 });
 
+// Barra de carga
 let progress = 0;
 let loaderInterval = setInterval(() => {
     progress += 2;
     document.getElementById("progress").style.width = progress + "%";
     document.getElementById("progressText").innerText = progress + "%";
     if (progress >= 100) {
-        clearInterval
+        clearInterval(loaderInterval);
+        document.getElementById("loaderScreen").style.display = "none";
+        document.getElementById("infoScreen").style.display = "block";
+    }
+}, 50);
