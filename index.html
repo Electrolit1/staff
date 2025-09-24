@@ -7,7 +7,7 @@
 <style>
     body {
         font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #2b5876, #4e4376);
+        background: linear-gradient(135deg, #1b3a2f, #000);
         color: white;
         display: flex;
         justify-content: center;
@@ -15,30 +15,31 @@
         height: 100vh;
     }
     .form-container {
-        background: rgba(0,0,0,0.6);
-        padding: 20px;
-        border-radius: 10px;
-        width: 350px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        background: rgba(0,0,0,0.8);
+        padding: 30px;
+        border-radius: 12px;
+        width: 400px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     }
     h2 {
         text-align: center;
         margin-bottom: 20px;
+        color: #9ccc65;
     }
     label {
         font-weight: bold;
     }
-    input, textarea, select {
+    input, textarea {
         width: 100%;
-        padding: 8px;
-        margin: 8px 0 15px;
+        padding: 10px;
+        margin: 8px 0 20px;
         border: none;
         border-radius: 5px;
     }
     button {
-        background: #4CAF50;
+        background: #2e4d36;
         color: white;
-        padding: 10px;
+        padding: 12px;
         width: 100%;
         border: none;
         border-radius: 5px;
@@ -46,7 +47,24 @@
         font-size: 16px;
     }
     button:hover {
-        background: #45a049;
+        background: #1b3a2f;
+    }
+    .step {
+        display: none;
+        animation: fadeIn 0.5s ease;
+    }
+    .step.active {
+        display: block;
+    }
+    @keyframes fadeIn {
+        from {opacity: 0;}
+        to {opacity: 1;}
+    }
+    .success {
+        text-align: center;
+        color: #9ccc65;
+        font-size: 20px;
+        margin-top: 20px;
     }
 </style>
 </head>
@@ -55,32 +73,58 @@
 <div class="form-container">
 <h2>Formulario Staff</h2>
 <form id="form">
-    <label>Nombre Real:</label>
-    <input type="text" name="nombre" placeholder="Tu nombre completo" required>
 
-    <label>Correo:</label>
-    <input type="email" name="correo" placeholder="Tu email" required>
+    <div class="step active">
+        <label>Nombre Real:</label>
+        <input type="text" name="nombre" required>
+        <button type="button" onclick="nextStep()">Siguiente</button>
+    </div>
 
-    <label>País:</label>
-    <input type="text" name="pais" placeholder="País" required>
+    <div class="step">
+        <label>Correo:</label>
+        <input type="email" name="correo" required>
+        <button type="button" onclick="nextStep()">Siguiente</button>
+    </div>
 
-    <label>Cumpleaños:</label>
-    <input type="date" name="cumpleanos" required>
+    <div class="step">
+        <label>País:</label>
+        <input type="text" name="pais" required>
+        <button type="button" onclick="nextStep()">Siguiente</button>
+    </div>
 
-    <label>Edad:</label>
-    <input type="number" name="edad" placeholder="Tu edad" required>
+    <div class="step">
+        <label>Cumpleaños:</label>
+        <input type="date" name="cumpleanos" required>
+        <button type="button" onclick="nextStep()">Siguiente</button>
+    </div>
 
-    <label>Nick en Discord:</label>
-    <input type="text" name="discord" placeholder="Tu nick en Discord" required>
+    <div class="step">
+        <label>Edad:</label>
+        <input type="number" name="edad" required>
+        <button type="button" onclick="nextStep()">Siguiente</button>
+    </div>
 
-    <label>Nick en Minecraft:</label>
-    <input type="text" name="minecraft" placeholder="Tu nick en Minecraft" required>
+    <div class="step">
+        <label>Nick en Discord:</label>
+        <input type="text" name="discord" required>
+        <button type="button" onclick="nextStep()">Siguiente</button>
+    </div>
 
-    <label>¿Qué te gusta hacer en tu tiempo libre?</label>
-    <textarea name="tiempoLibre" placeholder="Escribe aquí..." required></textarea>
+    <div class="step">
+        <label>Nick en Minecraft:</label>
+        <input type="text" name="minecraft" required>
+        <button type="button" onclick="nextStep()">Siguiente</button>
+    </div>
 
-    <button type="submit">Enviar</button>
+    <div class="step">
+        <label>¿Qué te gusta hacer en tu tiempo libre?</label>
+        <textarea name="tiempoLibre" required></textarea>
+        <button type="submit">Enviar</button>
+    </div>
+
 </form>
+
+<div id="successMessage" class="success"></div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -101,29 +145,40 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-document.getElementById("form").addEventListener("submit", function(e) {
-  e.preventDefault();
+let currentStep = 0;
+const steps = document.querySelectorAll(".step");
 
-  const formData = {
-    nombre: e.target.nombre.value,
-    correo: e.target.correo.value,
-    pais: e.target.pais.value,
-    cumpleanos: e.target.cumpleanos.value,
-    edad: e.target.edad.value,
-    discord: e.target.discord.value,
-    minecraft: e.target.minecraft.value,
-    tiempoLibre: e.target.tiempoLibre.value,
-    fechaEnvio: new Date().toISOString()
-  };
-
-  db.ref("respuestas").push(formData, function(error) {
-    if (error) {
-      alert("❌ Error al enviar: " + error);
-    } else {
-      alert("✅ Respuesta enviada correctamente");
-      e.target.reset();
+function nextStep() {
+    steps[currentStep].classList.remove("active");
+    currentStep++;
+    if (currentStep < steps.length) {
+        steps[currentStep].classList.add("active");
     }
-  });
+}
+
+document.getElementById("form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const formData = {
+        nombre: e.target.nombre.value,
+        correo: e.target.correo.value,
+        pais: e.target.pais.value,
+        cumpleanos: e.target.cumpleanos.value,
+        edad: e.target.edad.value,
+        discord: e.target.discord.value,
+        minecraft: e.target.minecraft.value,
+        tiempoLibre: e.target.tiempoLibre.value,
+        fechaEnvio: new Date().toISOString()
+    };
+
+    db.ref("respuestas").push(formData, function(error) {
+        if (error) {
+            alert("❌ Error al enviar: " + error);
+        } else {
+            document.getElementById("form").style.display = "none";
+            document.getElementById("successMessage").innerHTML = "✅ Respuesta enviada correctamente!";
+        }
+    });
 });
 </script>
 
