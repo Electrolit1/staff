@@ -7,6 +7,7 @@ body {
     align-items: center;
     height: 100vh;
 }
+
 .container {
     background: rgba(0,0,0,0.8);
     padding: 30px;
@@ -15,12 +16,15 @@ body {
     box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     text-align: center;
 }
+
 h2 {
     color: #9ccc65;
 }
+
 label {
     font-weight: bold;
 }
+
 input, textarea {
     width: 100%;
     padding: 10px;
@@ -28,6 +32,7 @@ input, textarea {
     border: none;
     border-radius: 5px;
 }
+
 button {
     background: #2e4d36;
     color: white;
@@ -38,31 +43,43 @@ button {
     cursor: pointer;
     font-size: 16px;
 }
+
 button:hover {
     background: #1b3a2f;
 }
+
 .step {
     display: none;
     animation: fadeIn 0.5s ease;
 }
+
 .step.active {
     display: block;
 }
-.error-message {
-    color: red;
-    font-size: 12px;
-    display: none;
-}
+
 @keyframes fadeIn {
     from {opacity: 0;}
     to {opacity: 1;}
 }
+
 .success {
     text-align: center;
     color: #9ccc65;
-    font-size: 20px;
+    font-size: 16px;
     margin-top: 20px;
 }
+
+.permanent-message {
+    background: #1b3a2f;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #9ccc65;
+    font-size: 16px;
+    text-align: center;
+    line-height: 1.5em;
+}
+
+/* Barra de carga */
 #loader {
     width: 100%;
     background: rgba(255, 255, 255, 0.1);
@@ -74,7 +91,4 @@ button:hover {
     height: 20px;
     background: #9ccc65;
     width: 0%;
-}
-#progressText {
-    margin-top: 5px;
 }
