@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Formulario Staff</title>
-<link rel="stylesheet" href="style/style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -23,63 +23,61 @@
 <div class="container" id="formScreen" style="display:none;">
     <h2>Formulario Staff</h2>
     <form id="form">
-
         <div class="step active">
             <label>Nombre Real:</label>
             <input type="text" name="nombre" required>
-            <div class="error-message"></div>
+            <span class="error-message"></span>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
 
         <div class="step">
             <label>Correo:</label>
             <input type="email" name="correo" required>
-            <div class="error-message"></div>
+            <span class="error-message"></span>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
 
         <div class="step">
             <label>País:</label>
             <input type="text" name="pais" required>
-            <div class="error-message"></div>
+            <span class="error-message"></span>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
 
         <div class="step">
             <label>Cumpleaños:</label>
             <input type="date" name="cumpleanos" required>
-            <div class="error-message"></div>
+            <span class="error-message"></span>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
 
         <div class="step">
             <label>Edad:</label>
             <input type="number" name="edad" required>
-            <div class="error-message"></div>
+            <span class="error-message"></span>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
 
         <div class="step">
             <label>Nick en Discord:</label>
             <input type="text" name="discord" required>
-            <div class="error-message"></div>
+            <span class="error-message"></span>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
 
         <div class="step">
             <label>Nick en Minecraft:</label>
             <input type="text" name="minecraft" required>
-            <div class="error-message"></div>
+            <span class="error-message"></span>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
 
         <div class="step">
             <label>¿Qué te gusta hacer en tu tiempo libre?</label>
             <textarea name="tiempoLibre" required></textarea>
-            <div class="error-message"></div>
+            <span class="error-message"></span>
             <button type="submit">Enviar</button>
         </div>
-
     </form>
     <div id="successMessage" class="success"></div>
 </div>
@@ -87,6 +85,5 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="script.js"></script>
-
 </body>
 </html>
