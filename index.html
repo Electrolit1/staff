@@ -8,11 +8,11 @@
 <body>
   <h2>Formulario Staff</h2>
   <form id="form">
-    <label for="nombre">Nombre:</label><br>
-    <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required><br><br>
+    <label>Nombre:</label><br>
+    <input type="text" name="nombre" required><br><br>
 
-    <label for="edad">Edad:</label><br>
-    <input type="number" id="edad" name="edad" placeholder="Tu edad" required><br><br>
+    <label>Edad:</label><br>
+    <input type="number" name="edad" required><br><br>
 
     <button type="submit">Enviar</button>
   </form>
@@ -24,7 +24,7 @@
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData);
 
-      const url = "https://script.google.com/macros/s/AKfycbyJA5MgWnWoeU_uuq16Vygue3VVWGi8AO1xXS-sAYD4H7dMawQWNX1CiuhrMQEncQw/exec"; // tu URL aquí
+      const url = "https://script.google.com/macros/s/AKfycbz7sXCnWGRkVpeH2-DznPqznZlqpaNZ_KyKAUucwiIS4tVZyu4Nx1BStXxtycrXZ7M/exec"; // tu URL aquí
 
       try {
         const res = await fetch(url, {
@@ -37,7 +37,7 @@
         if (result.status === "success") {
           alert("✅ Respuesta enviada correctamente.");
         } else {
-          alert("❌ Error al enviar: " + result.message);
+          alert("❌ Error: " + result.message);
         }
       } catch (error) {
         alert("❌ Error en el envío: " + error.message);
