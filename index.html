@@ -18,6 +18,7 @@
     <p>Estas preguntas son personales y debes responderlas honestamente.<br>No serán reveladas a nadie.</p>
     <p><b>Por favor, no compartas este enlace para proteger tus respuestas.</b></p>
     <button onclick="startForm()">OK</button>
+    <button onclick="showPrivacyModal()">Privacidad</button>
 </div>
 
 <div class="container" id="formScreen" style="display:none;">
@@ -28,49 +29,42 @@
             <input type="text" name="nombre" required>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
-
         <div class="step">
             <label>Correo:</label>
             <input type="email" name="correo" required>
             <button type="button" onclick="prevStep()">Atrás</button>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
-
         <div class="step">
             <label>País:</label>
             <input type="text" name="pais" required>
             <button type="button" onclick="prevStep()">Atrás</button>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
-
         <div class="step">
             <label>Cumpleaños:</label>
             <input type="date" name="cumpleanos" required>
             <button type="button" onclick="prevStep()">Atrás</button>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
-
         <div class="step">
             <label>Edad:</label>
             <input type="number" name="edad" required>
             <button type="button" onclick="prevStep()">Atrás</button>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
-
         <div class="step">
             <label>Nick en Discord:</label>
             <input type="text" name="discord" required>
             <button type="button" onclick="prevStep()">Atrás</button>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
-
         <div class="step">
             <label>Nick en Minecraft:</label>
             <input type="text" name="minecraft" required>
             <button type="button" onclick="prevStep()">Atrás</button>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
-
         <div class="step">
             <label>¿Qué te gusta hacer en tu tiempo libre?</label>
             <textarea name="tiempoLibre" required></textarea>
@@ -78,7 +72,6 @@
             <button type="submit">Enviar</button>
         </div>
     </form>
-
     <div id="successMessage" class="success"></div>
 </div>
 
@@ -87,6 +80,21 @@
     <div class="modal-content">
         <span class="close" onclick="closeErrorModal()">&times;</span>
         <p id="errorText"></p>
+    </div>
+</div>
+
+<!-- Modal de privacidad -->
+<div id="privacyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closePrivacyModal()">&times;</span>
+        <h3>Política de Privacidad</h3>
+        <ul>
+            <li>Las respuestas son confidenciales.</li>
+            <li>No se compartirán los datos personales.</li>
+            <li>Este formulario es exclusivo para el personal autorizado.</li>
+            <li>El uso indebido de la información es sancionado según la ley.</li>
+            <li>No compartas el enlace del formulario.</li>
+        </ul>
     </div>
 </div>
 
