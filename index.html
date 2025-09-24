@@ -1,48 +1,61 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulario Staff</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario Staff</title>
 </head>
 <body>
-  <h2>Formulario Staff</h2>
-  <form id="form">
-    <label>Nombre:</label><br>
-    <input type="text" name="nombre" required><br><br>
+<h2>Formulario Staff</h2>
+<form id="form">
+  <label>Nombre:</label><br>
+  <input type="text" name="nombre" required><br><br>
 
-    <label>Edad:</label><br>
-    <input type="number" name="edad" required><br><br>
+  <label>Edad:</label><br>
+  <input type="number" name="edad" required><br><br>
 
-    <button type="submit">Enviar</button>
-  </form>
+  <button type="submit">Enviar</button>
+</form>
 
-  <script>
-    document.getElementById("form").addEventListener("submit", async function(e) {
-      e.preventDefault();
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-      const formData = new FormData(e.target);
-      const data = Object.fromEntries(formData);
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAbkpn2i02BQ4EdbxPRmjMTiJb_U32noZA",
+  authDomain: "respuestas-a0c38.firebaseapp.com",
+  databaseURL: "https://respuestas-a0c38-default-rtdb.firebaseio.com",
+  projectId: "respuestas-a0c38",
+  storageBucket: "respuestas-a0c38.appspot.com",
+  messagingSenderId: "694006707121",
+  appId: "1:694006707121:web:79267ca0496b935bd88390",
+  measurementId: "G-FLNG6V9KMK"
+};
 
-      const url = "https://script.google.com/macros/s/AKfycbz7sXCnWGRkVpeH2-DznPqznZlqpaNZ_KyKAUucwiIS4tVZyu4Nx1BStXxtycrXZ7M/exec"; // tu URL aquí
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-      try {
-        const res = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
+document.getElementById("form").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-        const result = await res.json();
-        if (result.status === "success") {
-          alert("✅ Respuesta enviada correctamente.");
-        } else {
-          alert("❌ Error: " + result.message);
-        }
-      } catch (error) {
-        alert("❌ Error en el envío: " + error.message);
-      }
-    });
-  </script>
+  const nombre = e.target.nombre.value;
+  const edad = e.target.edad.value;
+
+  const nuevaRespuesta = {
+    nombre: nombre,
+    edad: edad,
+    fecha: new Date().toISOString()
+  };
+
+  db.ref("respuestas").push(nuevaRespuesta, function(error) {
+    if (error) {
+      alert("❌ Error al enviar: " + error);
+    } else {
+      alert("✅ Respuesta enviada correctamente");
+      e.target.reset();
+    }
+  });
+});
+</script>
 </body>
 </html>
