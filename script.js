@@ -16,17 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentStep = 0;
     const steps = document.querySelectorAll(".step");
 
-    async function getUserIP() {
-        try {
-            const res = await fetch("https://api.ipify.org?format=json");
-            const data = await res.json();
-            return data.ip;
-        } catch (err) {
-            console.error("No se pudo obtener IP:", err);
-            return null;
-        }
-    }
-
     window.nextStep = function () {
         const inputs = steps[currentStep].querySelectorAll("input, textarea");
         let allFilled = true;
@@ -34,16 +23,24 @@ document.addEventListener("DOMContentLoaded", function () {
             const errorMsg = input.parentElement.querySelector(".error-message");
             if (!input.value.trim()) {
                 allFilled = false;
-                errorMsg.innerText = "❌ Esta pregunta es obligatoria.";
-                errorMsg.style.display = "block";
+                if (!errorMsg) {
+                    const err = document.createElement("div");
+                    err.className = "error-message";
+                    err.style.color = "red";
+                    err.innerText = "❌ Esta pregunta es obligatoria.";
+                    input.parentElement.appendChild(err);
+                } else {
+                    errorMsg.innerText = "❌ Esta pregunta es obligatoria.";
+                    errorMsg.style.display = "block";
+                }
                 input.style.border = "2px solid red";
             } else {
-                errorMsg.innerText = "";
-                errorMsg.style.display = "none";
+                if (errorMsg) errorMsg.style.display = "none";
                 input.style.border = "none";
             }
         });
         if (!allFilled) return;
+
         steps[currentStep].classList.remove("active");
         currentStep++;
         if (currentStep < steps.length) {
@@ -56,20 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("formScreen").style.display = "block";
     };
 
-    document.getElementById("form").addEventListener("submit", async function (e) {
+    document.getElementById("form").addEventListener("submit", function (e) {
         e.preventDefault();
-
-        const userIP = await getUserIP();
-        if (!userIP) {
-            alert("❌ No se pudo obtener tu IP.");
-            return;
-        }
-
-        const snapshot = await db.ref("ips/" + userIP).get();
-        if (snapshot.exists()) {
-            alert("❌ Ya has enviado el formulario.");
-            return;
-        }
 
         let allAnswered = true;
         steps.forEach(step => {
@@ -92,15 +77,13 @@ document.addEventListener("DOMContentLoaded", function () {
             discord: e.target.discord.value,
             minecraft: e.target.minecraft.value,
             tiempoLibre: e.target.tiempoLibre.value,
-            fechaEnvio: new Date().toISOString(),
-            ip: userIP
+            fechaEnvio: new Date().toISOString()
         };
 
         db.ref("respuestas").push(formData, function (error) {
             if (error) {
                 alert("❌ Error al enviar: " + error);
             } else {
-                db.ref("ips/" + userIP).set(true);
                 document.getElementById("form").style.display = "none";
                 document.getElementById("successMessage").innerHTML = "✅ ¡Respuestas enviadas correctamente!";
             }
@@ -112,7 +95,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let loaderInterval = setInterval(() => {
         progress += 2;
         document.getElementById("progress").style.width = progress + "%";
-        document.getElementById("progressText").innerText = progress + "%";
         if (progress >= 100) {
             clearInterval(loaderInterval);
             document.getElementById("loaderScreen").style.display = "none";
