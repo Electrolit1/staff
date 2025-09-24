@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel Admin - Respuestas Staff</title>
+  <script type="module">
+    // Importa Firebase desde CDN (no necesitas instalar nada extra)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    // 🔑 Configuración de tu Firebase
+    const firebaseConfig = {
+      apiKey: "TU_API_KEY", // pega aquí tu apiKey
+      databaseURL: "https://respuestas-a0c38-default-rtdb.firebaseio.com"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Cuando la página cargue, lee las respuestas
+    window.onload = () => {
+      const respuestasRef = ref(db, "respuestas");
+      onValue(respuestasRef, (snapshot) => {
+        const data = snapshot.val();
+        const contenedor = document.getElementById("respuestas");
+        contenedor.innerHTML = "";
+
+        if (!data) {
+          contenedor.innerHTML = "<p>No hay respuestas todavía.</p>";
+          return;
+        }
+
+        Object.values(data).forEach((r) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <h3>${r.nombre} (${r.edad} años, ${r.pais})</h3>
+            <p><b>Experiencia:</b> ${r.experiencia}</p>
+            <p><b>Motivo:</b> ${r.motivo}</p>
+            <p><i>Enviado: ${new Date(r.fecha).toLocaleString("es-CO")}</i></p>
+          `;
+          contenedor.appendChild(card);
+        });
+      });
+    };
+  </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+      padding: 20px;
+    }
+    h2 { text-align: center; }
+    .card {
+      background: #222;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      box-shadow: 0 0 5px #000;
+    }
+  </style>
+</head>
+<body>
+  <h2>📋 Respuestas del Staff</h2>
+  <div id="respuestas"></div>
+</body>
+</html>
