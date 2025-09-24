@@ -1,60 +1,41 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Formulario Staff</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #eee;
-      padding: 20px;
-    }
-    form {
-      background: #222;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 400px;
-      margin: auto;
-    }
-    input, textarea, button {
-      width: 100%;
-      margin: 8px 0;
-      padding: 10px;
-      border-radius: 5px;
-      border: none;
-    }
-    button {
-      background: #28a745;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #218838;
-    }
+    body { font-family: Arial, Helvetica, sans-serif; background:#0b1020; color:#eee; padding:20px; }
+    .card { max-width:720px; margin:20px auto; background:#111; padding:20px; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.6); }
+    label{ display:block; margin-top:12px; font-weight:600; }
+    input, textarea, button { width:100%; padding:10px; margin-top:6px; border-radius:6px; border:1px solid #222; background:#0f1724; color:#eee; }
+    button{ background:#16a34a; border:none; cursor:pointer; font-weight:700; }
+    button:hover{ filter:brightness(.95); }
+    .small{ font-size:13px; color:#aab; margin-top:8px; }
   </style>
 </head>
 <body>
-  <h2>Formulario de Staff</h2>
-  <form action="/api/guardar" method="POST">
-    <label>Nombre completo:</label>
-    <input type="text" name="nombre" required>
+  <div class="card">
+    <h2>Solicitud para Staff</h2>
+    <form action="/api/guardar" method="POST">
+      <label>Nombre completo</label>
+      <input name="nombre" type="text" required>
 
-    <label>Edad:</label>
-    <input type="number" name="edad" required>
+      <label>Edad</label>
+      <input name="edad" type="number" min="12" required>
 
-    <label>País:</label>
-    <input type="text" name="pais" required>
+      <label>País</label>
+      <input name="pais" type="text" required>
 
-    <label>Experiencia en servidores:</label>
-    <textarea name="experiencia" required></textarea>
+      <label>Experiencia en servidores (breve)</label>
+      <textarea name="experiencia" rows="4" required></textarea>
 
-    <label>¿Por qué quieres ser staff?</label>
-    <textarea name="motivo" required></textarea>
+      <label>¿Por qué quieres ser staff?</label>
+      <textarea name="motivo" rows="4" required></textarea>
 
-    <button type="submit">Enviar</button>
-  </form>
+      <button type="submit">Enviar solicitud</button>
+      <p class="small">Al enviar, tu respuesta se guardará en la base de datos.</p>
+    </form>
+  </div>
 </body>
 </html>
