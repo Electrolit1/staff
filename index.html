@@ -96,7 +96,6 @@
 <div class="container" id="formScreen" style="display:none;">
     <h2>Formulario Staff</h2>
     <form id="form">
-
         <div class="step active">
             <label>Nombre Real:</label>
             <input type="text" name="nombre" required>
@@ -149,6 +148,10 @@
     <div id="successMessage" class="success"></div>
 </div>
 
+<div class="container" id="blockedScreen" style="display:none;">
+    <h2 style="color:red;">❌ Ya respondiste el formulario</h2>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -169,6 +172,7 @@ const db = firebase.database();
 
 let currentStep = 0;
 const steps = document.querySelectorAll(".step");
+let ip = "";
 
 function nextStep() {
     steps[currentStep].classList.remove("active");
@@ -183,10 +187,31 @@ function startForm() {
     document.getElementById("formScreen").style.display = "block";
 }
 
+async function checkIP() {
+    // Obtener IP
+    const res = await fetch("https://api.ipify.org?format=json");
+    const data = await res.json();
+    ip = data.ip;
+
+    // Consultar Firebase
+    const snapshot = await db.ref("respuestas").orderByChild("ip").equalTo(ip).once("value");
+
+    if (snapshot.exists()) {
+        // IP encontrada → bloqueado
+        document.getElementById("loaderScreen").style.display = "none";
+        document.getElementById("blockedScreen").style.display = "block";
+    } else {
+        // IP no encontrada → formulario
+        document.getElementById("loaderScreen").style.display = "none";
+        document.getElementById("infoScreen").style.display = "block";
+    }
+}
+
 document.getElementById("form").addEventListener("submit", function(e) {
     e.preventDefault();
 
     const formData = {
+        ip: ip,
         nombre: e.target.nombre.value,
         correo: e.target.correo.value,
         pais: e.target.pais.value,
@@ -215,8 +240,7 @@ let loaderInterval = setInterval(() => {
     document.getElementById("progress").style.width = progress + "%";
     if (progress >= 100) {
         clearInterval(loaderInterval);
-        document.getElementById("loaderScreen").style.display = "none";
-        document.getElementById("infoScreen").style.display = "block";
+        checkIP();
     }
 }, 50);
 
