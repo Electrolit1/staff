@@ -8,17 +8,26 @@ const firebaseConfig = {
   appId: "1:694006707121:web:79267ca0496b935bd88390",
   measurementId: "G-FLNG6V9KMK"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 let currentStep = 0;
 const steps = document.querySelectorAll(".step");
 
+async function getUserIP() {
+    try {
+        const res = await fetch("https://api.ipify.org?format=json");
+        const data = await res.json();
+        return data.ip;
+    } catch (err) {
+        console.error("No se pudo obtener IP:", err);
+        return null;
+    }
+}
+
 function nextStep() {
     const inputs = steps[currentStep].querySelectorAll("input, textarea");
     let allFilled = true;
-
     inputs.forEach(input => {
         const errorMsg = input.parentElement.querySelector(".error-message");
         if (!input.value.trim()) {
@@ -32,9 +41,7 @@ function nextStep() {
             input.style.border = "none";
         }
     });
-
     if (!allFilled) return;
-
     steps[currentStep].classList.remove("active");
     currentStep++;
     if (currentStep < steps.length) {
@@ -47,25 +54,29 @@ function startForm() {
     document.getElementById("formScreen").style.display = "block";
 }
 
-document.getElementById("form").addEventListener("submit", function(e) {
+document.getElementById("form").addEventListener("submit", async function(e) {
     e.preventDefault();
+    const userIP = await getUserIP();
+    if (!userIP) {
+        alert("❌ No se pudo obtener tu IP.");
+        return;
+    }
+    const snapshot = await db.ref("ips/" + userIP).get();
+    if (snapshot.exists()) {
+        alert("❌ Ya has enviado el formulario.");
+        return;
+    }
     let allAnswered = true;
-
     steps.forEach(step => {
         const inputs = step.querySelectorAll("input, textarea");
         inputs.forEach(input => {
-            const errorMsg = input.parentElement.querySelector(".error-message");
-            if (!input.value.trim()) {
-                allAnswered = false;
-                errorMsg.innerText = "❌ Esta pregunta es obligatoria.";
-                errorMsg.style.display = "block";
-                input.style.border = "2px solid red";
-            }
+            if (!input.value.trim()) allAnswered = false;
         });
     });
-
-    if (!allAnswered) return;
-
+    if (!allAnswered) {
+        alert("❌ Debes responder todas las preguntas.");
+        return;
+    }
     const formData = {
         nombre: e.target.nombre.value,
         correo: e.target.correo.value,
@@ -75,13 +86,14 @@ document.getElementById("form").addEventListener("submit", function(e) {
         discord: e.target.discord.value,
         minecraft: e.target.minecraft.value,
         tiempoLibre: e.target.tiempoLibre.value,
-        fechaEnvio: new Date().toISOString()
+        fechaEnvio: new Date().toISOString(),
+        ip: userIP
     };
-
     db.ref("respuestas").push(formData, function(error) {
         if (error) {
             alert("❌ Error al enviar: " + error);
         } else {
+            db.ref("ips/" + userIP).set(true);
             document.getElementById("form").style.display = "none";
             document.getElementById("successMessage").innerHTML = "✅ ¡Respuestas enviadas correctamente!";
         }
