@@ -15,8 +15,25 @@
 
 <div class="container" id="infoScreen" style="display:none;">
     <h2>Formulario Personal</h2>
-    <p>Estas preguntas son personales y debes responderlas honestamente.<br>No serán reveladas a nadie.<br><br>Por favor, no compartas este enlace para proteger tus respuestas.</p>
+    <div class="privacy-message">
+        <p><strong>Estas preguntas son personales y debes responderlas honestamente.</strong><br>
+        No serán reveladas a nadie.</p>
+        <p><em>Por favor, no compartas este enlace para proteger tus respuestas.</em></p>
+    </div>
     <button onclick="startForm()">OK</button>
+    <button class="privacy-btn" onclick="openPrivacy()">Política de Privacidad</button>
+</div>
+
+<!-- Modal privacidad -->
+<div id="privacyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closePrivacy()">&times;</span>
+        <h3>Política de Privacidad y Delitos</h3>
+        <p>1️⃣ Tus respuestas son confidenciales y almacenadas de forma segura.</p>
+        <p>2️⃣ No compartiremos tu información personal con terceros.</p>
+        <p>3️⃣ Está prohibido compartir este formulario sin autorización.</p>
+        <p>4️⃣ Cualquier uso indebido o intento de acceso no autorizado puede constituir un delito según la ley vigente.</p>
+    </div>
 </div>
 
 <div class="container" id="formScreen" style="display:none;">
