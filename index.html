@@ -4,24 +4,55 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Formulario Staff</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+      padding: 20px;
+    }
+    form {
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 400px;
+      margin: auto;
+    }
+    input, textarea, button {
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      background: #28a745;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #218838;
+    }
+  </style>
 </head>
 <body>
-  <h2>Formulario Staff</h2>
+  <h2>Formulario de Staff</h2>
   <form action="/api/guardar" method="POST">
-    <label>Nombre completo:</label><br>
-    <input type="text" name="nombre" required><br><br>
+    <label>Nombre completo:</label>
+    <input type="text" name="nombre" required>
 
-    <label>Edad:</label><br>
-    <input type="number" name="edad" required><br><br>
+    <label>Edad:</label>
+    <input type="number" name="edad" required>
 
-    <label>País:</label><br>
-    <input type="text" name="pais" required><br><br>
+    <label>País:</label>
+    <input type="text" name="pais" required>
 
-    <label>Experiencia en servidores:</label><br>
-    <textarea name="experiencia" required></textarea><br><br>
+    <label>Experiencia en servidores:</label>
+    <textarea name="experiencia" required></textarea>
 
-    <label>¿Por qué quieres ser staff?</label><br>
-    <textarea name="motivo" required></textarea><br><br>
+    <label>¿Por qué quieres ser staff?</label>
+    <textarea name="motivo" required></textarea>
 
     <button type="submit">Enviar</button>
   </form>
