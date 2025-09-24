@@ -17,12 +17,12 @@
     <h2>Formulario Personal</h2>
     <p>Estas preguntas son personales y debes responderlas honestamente.<br>No serán reveladas a nadie.<br><strong>Por favor, no compartas este enlace para proteger tus respuestas.</strong></p>
     <button onclick="startForm()">OK</button>
+    <button class="privacy-btn" onclick="showPrivacy()">Privacidad</button>
 </div>
 
 <div class="container" id="formScreen" style="display:none;">
     <h2>Formulario Staff</h2>
     <form id="form">
-
         <div class="step active">
             <label>Nombre Real:</label>
             <input type="text" name="nombre" required>
@@ -32,7 +32,7 @@
         <div class="step">
             <label>Correo:</label>
             <input type="email" name="correo" required>
-            <small>Por favor ingresa tu correo real. Usaremos esta información únicamente para fines autorizados.</small>
+            <small>Correo real. Usaremos esta información únicamente para fines autorizados.</small>
             <button type="button" onclick="prevStep()">Atrás</button>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
@@ -79,9 +79,29 @@
             <button type="button" onclick="prevStep()">Atrás</button>
             <button type="submit">Enviar</button>
         </div>
-
     </form>
     <div id="successMessage" class="success"></div>
+</div>
+
+<!-- Modal de Privacidad -->
+<div id="privacyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closePrivacy()">&times;</span>
+        <h2>Política de Privacidad</h2>
+        <p>1️⃣ Tus respuestas son confidenciales.<br>
+           2️⃣ No compartiremos tu información.<br>
+           3️⃣ Este formulario es solo para fines internos.<br>
+           4️⃣ Compartir este enlace está desaconsejado.<br>
+           5️⃣ Uso indebido puede conllevar acciones legales.</p>
+    </div>
+</div>
+
+<!-- Modal de Error -->
+<div id="errorModal" class="modal">
+    <div class="modal-content error">
+        <span class="close" onclick="closeError()">&times;</span>
+        <p id="errorMessage">❌ Por favor completa la pregunta antes de continuar.</p>
+    </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
