@@ -4,86 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Formulario Staff</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #1b3a2f, #000);
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    .container {
-        background: rgba(0,0,0,0.8);
-        padding: 30px;
-        border-radius: 12px;
-        width: 400px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-        text-align: center;
-    }
-    h2 {
-        color: #9ccc65;
-    }
-    label {
-        font-weight: bold;
-    }
-    input, textarea {
-        width: 100%;
-        padding: 10px;
-        margin: 8px 0 20px;
-        border: none;
-        border-radius: 5px;
-    }
-    input:invalid, textarea:invalid {
-        border: 2px solid red;
-    }
-    button {
-        background: #2e4d36;
-        color: white;
-        padding: 12px;
-        width: 100%;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-    button:hover {
-        background: #1b3a2f;
-    }
-    .step {
-        display: none;
-        animation: fadeIn 0.5s ease;
-    }
-    .step.active {
-        display: block;
-    }
-    @keyframes fadeIn {
-        from {opacity: 0;}
-        to {opacity: 1;}
-    }
-    .success {
-        text-align: center;
-        color: #9ccc65;
-        font-size: 20px;
-        margin-top: 20px;
-    }
-    #loader {
-        width: 100%;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        overflow: hidden;
-        margin-bottom: 20px;
-    }
-    #progress {
-        height: 20px;
-        background: #9ccc65;
-        width: 0%;
-    }
-    #progressText {
-        margin-bottom: 10px;
-    }
-</style>
+<link rel="stylesheet" href="style/style.css">
 </head>
 <body>
 
@@ -106,48 +27,56 @@
         <div class="step active">
             <label>Nombre Real:</label>
             <input type="text" name="nombre" required>
+            <div class="error-message"></div>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
 
         <div class="step">
             <label>Correo:</label>
             <input type="email" name="correo" required>
+            <div class="error-message"></div>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
 
         <div class="step">
             <label>País:</label>
             <input type="text" name="pais" required>
+            <div class="error-message"></div>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
 
         <div class="step">
             <label>Cumpleaños:</label>
             <input type="date" name="cumpleanos" required>
+            <div class="error-message"></div>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
 
         <div class="step">
             <label>Edad:</label>
             <input type="number" name="edad" required>
+            <div class="error-message"></div>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
 
         <div class="step">
             <label>Nick en Discord:</label>
             <input type="text" name="discord" required>
+            <div class="error-message"></div>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
 
         <div class="step">
             <label>Nick en Minecraft:</label>
             <input type="text" name="minecraft" required>
+            <div class="error-message"></div>
             <button type="button" onclick="nextStep()">Siguiente</button>
         </div>
 
         <div class="step">
             <label>¿Qué te gusta hacer en tu tiempo libre?</label>
             <textarea name="tiempoLibre" required></textarea>
+            <div class="error-message"></div>
             <button type="submit">Enviar</button>
         </div>
 
@@ -157,102 +86,7 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="script.js"></script>
 
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAbkpn2i02BQ4EdbxPRmjMTiJb_U32noZA",
-  authDomain: "respuestas-a0c38.firebaseapp.com",
-  databaseURL: "https://respuestas-a0c38-default-rtdb.firebaseio.com",
-  projectId: "respuestas-a0c38",
-  storageBucket: "respuestas-a0c38.appspot.com",
-  messagingSenderId: "694006707121",
-  appId: "1:694006707121:web:79267ca0496b935bd88390",
-  measurementId: "G-FLNG6V9KMK"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-let currentStep = 0;
-const steps = document.querySelectorAll(".step");
-
-function nextStep() {
-    const inputs = steps[currentStep].querySelectorAll("input, textarea");
-    let allFilled = true;
-    inputs.forEach(input => {
-        if (!input.value.trim()) {
-            allFilled = false;
-            input.style.border = "2px solid red";
-        } else {
-            input.style.border = "none";
-        }
-    });
-    if (!allFilled) {
-        alert("❌ Debes responder la pregunta antes de continuar.");
-        return;
-    }
-    steps[currentStep].classList.remove("active");
-    currentStep++;
-    if (currentStep < steps.length) {
-        steps[currentStep].classList.add("active");
-    }
-}
-
-function startForm() {
-    document.getElementById("infoScreen").style.display = "none";
-    document.getElementById("formScreen").style.display = "block";
-}
-
-document.getElementById("form").addEventListener("submit", function(e) {
-    e.preventDefault();
-    let allAnswered = true;
-    steps.forEach(step => {
-        const inputs = step.querySelectorAll("input, textarea");
-        inputs.forEach(input => {
-            if (!input.value.trim()) {
-                allAnswered = false;
-                input.style.border = "2px solid red";
-            } else {
-                input.style.border = "none";
-            }
-        });
-    });
-    if (!allAnswered) {
-        alert("❌ Faltan preguntas por responder. No puedes enviar el formulario.");
-        return;
-    }
-    const formData = {
-        nombre: e.target.nombre.value,
-        correo: e.target.correo.value,
-        pais: e.target.pais.value,
-        cumpleanos: e.target.cumpleanos.value,
-        edad: e.target.edad.value,
-        discord: e.target.discord.value,
-        minecraft: e.target.minecraft.value,
-        tiempoLibre: e.target.tiempoLibre.value,
-        fechaEnvio: new Date().toISOString()
-    };
-    db.ref("respuestas").push(formData, function(error) {
-        if (error) {
-            alert("❌ Error al enviar: " + error);
-        } else {
-            document.getElementById("form").style.display = "none";
-            document.getElementById("successMessage").innerHTML = "✅ ¡Respuestas enviadas correctamente!";
-        }
-    });
-});
-
-let progress = 0;
-let loaderInterval = setInterval(() => {
-    progress += 2;
-    document.getElementById("progress").style.width = progress + "%";
-    document.getElementById("progressText").innerText = progress + "%";
-    if (progress >= 100) {
-        clearInterval(loaderInterval);
-        document.getElementById("loaderScreen").style.display = "none";
-        document.getElementById("infoScreen").style.display = "block";
-    }
-}, 50);
-</script>
 </body>
 </html>
