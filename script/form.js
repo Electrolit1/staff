@@ -19,7 +19,7 @@ function nextStep() {
     const inputs = steps[currentStep].querySelectorAll("input, textarea");
     for (let input of inputs) {
         if (!input.value.trim()) {
-            alert("❌ Por favor completa la pregunta antes de continuar.");
+            showError("❌ Por favor completa la pregunta antes de continuar.");
             return;
         }
     }
@@ -43,7 +43,6 @@ function startForm() {
 
 document.getElementById("form").addEventListener("submit", function(e) {
     e.preventDefault();
-
     const formData = {
         nombre: e.target.nombre.value,
         correo: e.target.correo.value,
@@ -58,13 +57,30 @@ document.getElementById("form").addEventListener("submit", function(e) {
 
     db.ref("respuestas").push(formData, function(error) {
         if (error) {
-            alert("❌ Error al enviar: " + error);
+            showError("❌ Error al enviar: " + error);
         } else {
             document.getElementById("form").style.display = "none";
             document.getElementById("successMessage").innerHTML = "✅ ¡Respuestas enviadas correctamente!<br>No serán reveladas a nadie.";
         }
     });
 });
+
+function showPrivacy() {
+    document.getElementById("privacyModal").style.display = "block";
+}
+
+function closePrivacy() {
+    document.getElementById("privacyModal").style.display = "none";
+}
+
+function showError(message) {
+    document.getElementById("errorMessage").innerText = message;
+    document.getElementById("errorModal").style.display = "block";
+}
+
+function closeError() {
+    document.getElementById("errorModal").style.display = "none";
+}
 
 // Barra de carga
 let progress = 0;
@@ -77,3 +93,4 @@ let loaderInterval = setInterval(() => {
         document.getElementById("infoScreen").style.display = "block";
     }
 }, 50);
+
