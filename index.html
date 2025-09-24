@@ -35,6 +35,9 @@
         border: none;
         border-radius: 5px;
     }
+    input:invalid, textarea:invalid {
+        border: 2px solid red;
+    }
     button {
         background: #2e4d36;
         color: white;
@@ -65,7 +68,6 @@
         font-size: 20px;
         margin-top: 20px;
     }
-    /* Barra de carga */
     #loader {
         width: 100%;
         background: rgba(255, 255, 255, 0.1);
@@ -78,6 +80,9 @@
         background: #9ccc65;
         width: 0%;
     }
+    #progressText {
+        margin-bottom: 10px;
+    }
 </style>
 </head>
 <body>
@@ -85,6 +90,7 @@
 <div class="container" id="loaderScreen">
     <h2>Cargando...</h2>
     <div id="loader"><div id="progress"></div></div>
+    <div id="progressText">0%</div>
 </div>
 
 <div class="container" id="infoScreen" style="display:none;">
@@ -96,6 +102,7 @@
 <div class="container" id="formScreen" style="display:none;">
     <h2>Formulario Staff</h2>
     <form id="form">
+
         <div class="step active">
             <label>Nombre Real:</label>
             <input type="text" name="nombre" required>
@@ -148,10 +155,6 @@
     <div id="successMessage" class="success"></div>
 </div>
 
-<div class="container" id="blockedScreen" style="display:none;">
-    <h2 style="color:red;">❌ Ya respondiste el formulario</h2>
-</div>
-
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -172,9 +175,22 @@ const db = firebase.database();
 
 let currentStep = 0;
 const steps = document.querySelectorAll(".step");
-let ip = "";
 
 function nextStep() {
+    const inputs = steps[currentStep].querySelectorAll("input, textarea");
+    let allFilled = true;
+    inputs.forEach(input => {
+        if (!input.value.trim()) {
+            allFilled = false;
+            input.style.border = "2px solid red";
+        } else {
+            input.style.border = "none";
+        }
+    });
+    if (!allFilled) {
+        alert("❌ Debes responder la pregunta antes de continuar.");
+        return;
+    }
     steps[currentStep].classList.remove("active");
     currentStep++;
     if (currentStep < steps.length) {
@@ -187,31 +203,25 @@ function startForm() {
     document.getElementById("formScreen").style.display = "block";
 }
 
-async function checkIP() {
-    // Obtener IP
-    const res = await fetch("https://api.ipify.org?format=json");
-    const data = await res.json();
-    ip = data.ip;
-
-    // Consultar Firebase
-    const snapshot = await db.ref("respuestas").orderByChild("ip").equalTo(ip).once("value");
-
-    if (snapshot.exists()) {
-        // IP encontrada → bloqueado
-        document.getElementById("loaderScreen").style.display = "none";
-        document.getElementById("blockedScreen").style.display = "block";
-    } else {
-        // IP no encontrada → formulario
-        document.getElementById("loaderScreen").style.display = "none";
-        document.getElementById("infoScreen").style.display = "block";
-    }
-}
-
 document.getElementById("form").addEventListener("submit", function(e) {
     e.preventDefault();
-
+    let allAnswered = true;
+    steps.forEach(step => {
+        const inputs = step.querySelectorAll("input, textarea");
+        inputs.forEach(input => {
+            if (!input.value.trim()) {
+                allAnswered = false;
+                input.style.border = "2px solid red";
+            } else {
+                input.style.border = "none";
+            }
+        });
+    });
+    if (!allAnswered) {
+        alert("❌ Faltan preguntas por responder. No puedes enviar el formulario.");
+        return;
+    }
     const formData = {
-        ip: ip,
         nombre: e.target.nombre.value,
         correo: e.target.correo.value,
         pais: e.target.pais.value,
@@ -222,7 +232,6 @@ document.getElementById("form").addEventListener("submit", function(e) {
         tiempoLibre: e.target.tiempoLibre.value,
         fechaEnvio: new Date().toISOString()
     };
-
     db.ref("respuestas").push(formData, function(error) {
         if (error) {
             alert("❌ Error al enviar: " + error);
@@ -233,18 +242,17 @@ document.getElementById("form").addEventListener("submit", function(e) {
     });
 });
 
-// Barra de carga
 let progress = 0;
 let loaderInterval = setInterval(() => {
     progress += 2;
     document.getElementById("progress").style.width = progress + "%";
+    document.getElementById("progressText").innerText = progress + "%";
     if (progress >= 100) {
         clearInterval(loaderInterval);
-        checkIP();
+        document.getElementById("loaderScreen").style.display = "none";
+        document.getElementById("infoScreen").style.display = "block";
     }
 }, 50);
-
 </script>
-
 </body>
 </html>
