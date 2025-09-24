@@ -8,7 +8,6 @@ const firebaseConfig = {
   appId: "1:694006707121:web:79267ca0496b935bd88390",
   measurementId: "G-FLNG6V9KMK"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
@@ -54,13 +53,15 @@ document.getElementById("form").addEventListener("submit", function(e) {
         tiempoLibre: e.target.tiempoLibre.value,
         fechaEnvio: new Date().toISOString()
     };
-
     db.ref("respuestas").push(formData, function(error) {
         if (error) {
             showErrorModal("❌ Error al enviar: " + error);
         } else {
             document.getElementById("form").style.display = "none";
-            document.getElementById("successMessage").innerHTML = "✅ ¡Respuestas enviadas correctamente!<br>No serán reveladas a nadie.<br><b>Por favor no compartas este enlace.</b>";
+            document.getElementById("successMessage").innerHTML = `
+                ✅ ¡Respuestas enviadas correctamente!<br>
+                No serán reveladas a nadie.<br>
+                <b>Por favor no compartas este enlace.</b>`;
         }
     });
 });
@@ -71,6 +72,12 @@ function showErrorModal(message) {
 }
 function closeErrorModal() {
     document.getElementById("errorModal").style.display = "none";
+}
+function showPrivacyModal() {
+    document.getElementById("privacyModal").style.display = "block";
+}
+function closePrivacyModal() {
+    document.getElementById("privacyModal").style.display = "none";
 }
 
 // Barra de carga
