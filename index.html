@@ -4,18 +4,84 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Formulario Staff</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #2b5876, #4e4376);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .form-container {
+        background: rgba(0,0,0,0.6);
+        padding: 20px;
+        border-radius: 10px;
+        width: 350px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    label {
+        font-weight: bold;
+    }
+    input, textarea, select {
+        width: 100%;
+        padding: 8px;
+        margin: 8px 0 15px;
+        border: none;
+        border-radius: 5px;
+    }
+    button {
+        background: #4CAF50;
+        color: white;
+        padding: 10px;
+        width: 100%;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    button:hover {
+        background: #45a049;
+    }
+</style>
 </head>
 <body>
+
+<div class="form-container">
 <h2>Formulario Staff</h2>
 <form id="form">
-  <label>Nombre:</label><br>
-  <input type="text" name="nombre" required><br><br>
+    <label>Nombre Real:</label>
+    <input type="text" name="nombre" placeholder="Tu nombre completo" required>
 
-  <label>Edad:</label><br>
-  <input type="number" name="edad" required><br><br>
+    <label>Correo:</label>
+    <input type="email" name="correo" placeholder="Tu email" required>
 
-  <button type="submit">Enviar</button>
+    <label>País:</label>
+    <input type="text" name="pais" placeholder="País" required>
+
+    <label>Cumpleaños:</label>
+    <input type="date" name="cumpleanos" required>
+
+    <label>Edad:</label>
+    <input type="number" name="edad" placeholder="Tu edad" required>
+
+    <label>Nick en Discord:</label>
+    <input type="text" name="discord" placeholder="Tu nick en Discord" required>
+
+    <label>Nick en Minecraft:</label>
+    <input type="text" name="minecraft" placeholder="Tu nick en Minecraft" required>
+
+    <label>¿Qué te gusta hacer en tu tiempo libre?</label>
+    <textarea name="tiempoLibre" placeholder="Escribe aquí..." required></textarea>
+
+    <button type="submit">Enviar</button>
 </form>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -38,16 +104,19 @@ const db = firebase.database();
 document.getElementById("form").addEventListener("submit", function(e) {
   e.preventDefault();
 
-  const nombre = e.target.nombre.value;
-  const edad = e.target.edad.value;
-
-  const nuevaRespuesta = {
-    nombre: nombre,
-    edad: edad,
-    fecha: new Date().toISOString()
+  const formData = {
+    nombre: e.target.nombre.value,
+    correo: e.target.correo.value,
+    pais: e.target.pais.value,
+    cumpleanos: e.target.cumpleanos.value,
+    edad: e.target.edad.value,
+    discord: e.target.discord.value,
+    minecraft: e.target.minecraft.value,
+    tiempoLibre: e.target.tiempoLibre.value,
+    fechaEnvio: new Date().toISOString()
   };
 
-  db.ref("respuestas").push(nuevaRespuesta, function(error) {
+  db.ref("respuestas").push(formData, function(error) {
     if (error) {
       alert("❌ Error al enviar: " + error);
     } else {
@@ -57,5 +126,6 @@ document.getElementById("form").addEventListener("submit", function(e) {
   });
 });
 </script>
+
 </body>
 </html>
