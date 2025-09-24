@@ -7,20 +7,24 @@ body {
     align-items: center;
     height: 100vh;
 }
+
 .container {
-    background: rgba(0,0,0,0.85);
+    background: rgba(0,0,0,0.8);
     padding: 30px;
     border-radius: 12px;
     width: 400px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     text-align: center;
 }
+
 h2 {
     color: #9ccc65;
 }
+
 label {
     font-weight: bold;
 }
+
 input, textarea {
     width: 100%;
     padding: 10px;
@@ -28,37 +32,50 @@ input, textarea {
     border: none;
     border-radius: 5px;
 }
+
+small {
+    display: block;
+    color: #ccc;
+    font-size: 12px;
+}
+
 button {
     background: #2e4d36;
     color: white;
     padding: 12px;
-    width: 48%;
+    width: 100%;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    margin-top: 10px;
+    margin-top: 5px;
 }
+
 button:hover {
     background: #1b3a2f;
 }
+
 .step {
     display: none;
     animation: fadeIn 0.5s ease;
 }
+
 .step.active {
     display: block;
 }
+
 @keyframes fadeIn {
     from {opacity: 0;}
     to {opacity: 1;}
 }
+
 .success {
     text-align: center;
     color: #9ccc65;
     font-size: 20px;
     margin-top: 20px;
 }
+
 #loader {
     width: 100%;
     background: rgba(255, 255, 255, 0.1);
@@ -66,38 +83,9 @@ button:hover {
     overflow: hidden;
     margin-bottom: 20px;
 }
+
 #progress {
     height: 20px;
     background: #9ccc65;
     width: 0%;
-}
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.7);
-}
-.modal-content {
-    background-color: #2e4d36;
-    margin: 15% auto;
-    padding: 20px;
-    border-radius: 10px;
-    width: 80%;
-    text-align: left;
-    color: white;
-}
-.close {
-    color: #ff4c4c;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-.modal-content h3 {
-    color: #9ccc65;
 }
