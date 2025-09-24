@@ -1,41 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Formulario Staff</title>
-  <style>
-    body { font-family: Arial, Helvetica, sans-serif; background:#0b1020; color:#eee; padding:20px; }
-    .card { max-width:720px; margin:20px auto; background:#111; padding:20px; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.6); }
-    label{ display:block; margin-top:12px; font-weight:600; }
-    input, textarea, button { width:100%; padding:10px; margin-top:6px; border-radius:6px; border:1px solid #222; background:#0f1724; color:#eee; }
-    button{ background:#16a34a; border:none; cursor:pointer; font-weight:700; }
-    button:hover{ filter:brightness(.95); }
-    .small{ font-size:13px; color:#aab; margin-top:8px; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de Respuestas</title>
 </head>
 <body>
-  <div class="card">
-    <h2>Solicitud para Staff</h2>
-    <form action="/api/guardar" method="POST">
-      <label>Nombre completo</label>
-      <input name="nombre" type="text" required>
+  <h1>Formulario de Respuestas</h1>
+  <form id="form">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required><br><br>
+    <label for="edad">Edad:</label>
+    <input type="number" id="edad" name="edad" required><br><br>
+    <button type="submit">Enviar</button>
+  </form>
 
-      <label>Edad</label>
-      <input name="edad" type="number" min="12" required>
+  <script>
+    document.getElementById("form").addEventListener("submit", async function(e) {
+      e.preventDefault();
 
-      <label>País</label>
-      <input name="pais" type="text" required>
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
 
-      <label>Experiencia en servidores (breve)</label>
-      <textarea name="experiencia" rows="4" required></textarea>
+      const url = "https://script.google.com/macros/s/AKfycbwZWmVrT8l2KWMSH1oBINy4hA66O1QwL7qFCIa73Z-pJibERNlA0EChd13fjAGpLHI/exec"; // Reemplaza con tu URL
 
-      <label>¿Por qué quieres ser staff?</label>
-      <textarea name="motivo" rows="4" required></textarea>
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: { "Content-Type": "application/json" }
+        });
 
-      <button type="submit">Enviar solicitud</button>
-      <p class="small">Al enviar, tu respuesta se guardará en la base de datos.</p>
-    </form>
-  </div>
+        if (response.ok) {
+          alert("¡Respuesta enviada con éxito!");
+        } else {
+          alert("Hubo un error al enviar la respuesta.");
+        }
+      } catch (error) {
+        console.error("Error al enviar la respuesta:", error);
+        alert("Hubo un error al enviar la respuesta.");
+      }
+    });
+  </script>
 </body>
 </html>
